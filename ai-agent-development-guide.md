@@ -208,6 +208,8 @@ Prompt 应明确：
 
 Java 适合企业级 Agent 应用，尤其适合已有 Spring Boot、微服务、权限体系、数据库和内部系统集成能力的团队。
 
+本节仅用于技术生态对比；如果已有 Java/Spring Boot 基础但后续希望专注 Python Agent，请直接按照第四部分学习，本项目后续不采用 Java 或 Java Agent 框架。
+
 推荐关注：
 
 - Spring AI
@@ -224,113 +226,50 @@ Java 适合企业级 Agent 应用，尤其适合已有 Spring Boot、微服务�
 - 想结合企业项目落地：Java + Spring AI 或 LangChain4j
 - 想做前端交互产品：TypeScript
 
-## 四、Java/Spring Boot 程序员的学习路线
+## 四、有 Java/Spring Boot 基础程序员的 Python + LangChain/LangGraph 学习路线
 
-### 第一阶段：理解大模型基础
+后续开发统一使用 Python、LangChain 和 LangGraph，不使用 Java 语言或 Java Agent 框架。Java/Spring Boot 经验仍然有价值：数据库、事务、并发、权限、微服务和监控等工程能力可以直接迁移。
 
-掌握以下概念即可，不需要一开始研究模型训练：
+如果你的目标是“开始编写真正的 AI Agent”，我更推荐：
 
-- Token
-- Context Window
-- Temperature
-- Embedding
-- Function Calling / Tool Calling
-- Structured Output
-- Streaming
-- RAG
-- Agent Loop
-- Fine-tuning 与 Prompt Engineering 的区别
+> **LangGraph 为主，LangChain 作为组件库。**
 
-目标是理解大模型的能力边界和不确定性。
+简单区分：
 
-### 第二阶段：用 Java 调用模型 API
+- **LangChain**：适合快速调用模型、Prompt、工具、检索、RAG、结构化输出。
+- **LangGraph**：适合编排 Agent 的状态、步骤、循环、分支、人工介入、错误重试和多 Agent 协作。
 
-先不用复杂框架，直接使用 HTTP 或 SDK 完成：
+可以这样理解：
 
-- 普通对话
-- 流式输出
-- 多轮对话
-- JSON 结构化输出
-- Function Calling
-- 超时、重试、限流和日志
+> **LangChain 是零件库，LangGraph 是流程控制器。**
 
-推荐练习项目：
+### 第一阶段：补齐 Python 与异步编程基础
 
-> 用户输入自然语言 → Agent 查询订单系统 → 返回订单状态
+重点学习函数、类、异常、类型标注、虚拟环境、包管理、`async/await`、HTTP 请求、JSON、日志和 pytest。能读懂并修改一个小型 Python 项目即可，不必先学习数据科学或模型训练。
 
-### 第三阶段：学习 Spring AI 或 LangChain4j
+### 第二阶段：掌握大模型 API 与 LangChain Core
 
-重点掌握：
+使用 OpenAI 兼容 API 完成普通对话、流式输出、多轮消息、Prompt 模板、结构化输出和 Token/费用统计。然后学习 LangChain 的 `ChatModel`、消息、Runnable、Parser 和回调机制，理解模型的不确定性与上下文窗口限制。
 
-- ChatClient
-- Prompt Template
-- Tool
-- Advisor
-- Memory
-- Embedding
-- Vector Store
-- Structured Output
-- Observability
+### 第三阶段：用 LangGraph 构建有状态工作流
 
-Java 开发者可以先选择一个框架，不建议同时深入多个框架。
+掌握 `StateGraph`、节点、边、条件分支、循环、`MessagesState`、checkpoint 和 `thread_id`。先实现“输入 → 模型 → 输出”的单 Agent，再加入重试、最大步数、超时和人工确认。当前仓库的 CLI 对话 Agent 就是这一阶段的最小实践。
 
-- Spring Boot 企业开发路线：Spring AI
-- 深入 Agent 编排和模型抽象：LangChain4j
-- 复杂状态机：了解 LangGraph，也可以通过独立服务调用
+### 第四阶段：工具调用与可靠执行
 
-### 第四阶段：完成一个 RAG 项目
+用 Python 函数或 LangChain Tool 接入 REST API、数据库、文件和业务服务，学习参数校验、结构化结果、权限控制、幂等性、错误恢复和审计日志。让模型负责选择工具，让代码负责真正执行；付款、删除、状态变更等高风险操作必须人工确认。
 
-可以开发“企业制度问答助手”：
+### 第五阶段：RAG 与记忆
 
-- 上传 PDF、Word、Markdown
-- 自动解析和切分
-- 向量化存储
-- 查询相关资料
-- 返回带引用的答案
-- 对无法确认的问题明确说“不知道”
+完成文档解析、切分、Embedding、向量库检索、引用回答和“无法确认时明确说不知道”。区分短期会话状态、摘要记忆与长期业务记忆，避免把全部历史消息无限发送给模型。
 
-### 第五阶段：开发 Tool Agent
+### 第六阶段：Agent 编排、MCP 与评估
 
-可以实现：
+学习 Planner-Executor、ReAct、子图和多 Agent 协作，但优先采用“工作流 + Agent 节点”。了解 MCP 工具协议，并建立包含答案质量、工具调用、权限边界、幻觉、延迟和成本的评测集。
 
-- 查询数据库
-- 调用订单接口
-- 创建工单
-- 查询天气或物流
-- 生成 Excel 或报告
-- 发送邮件
+### 第七阶段：生产化部署
 
-重点关注工具权限、参数校验、错误恢复、幂等性、审计日志和人工确认机制。
-
-### 第六阶段：学习 Agent 工作流和 MCP
-
-进一步掌握：
-
-- 状态机
-- 条件分支
-- 重试和回滚
-- 人机协同
-- 长任务恢复
-- 多 Agent 协作
-- MCP 工具协议
-
-MCP 可以理解为一种标准化的“模型连接外部工具和数据源”的方式。
-
-### 第七阶段：生产化
-
-最后补齐工程能力：
-
-- Token 和费用统计
-- Prompt 版本管理
-- 模型降级
-- 缓存
-- 并发控制
-- 熔断和重试
-- 链路追踪
-- 评测集
-- 数据脱敏
-- 权限与审计
-- 灰度发布
+补齐配置管理、密钥保护、缓存、并发控制、重试/熔断、链路追踪、Prompt 版本、数据脱敏、权限审计、Docker 部署和模型降级。为每个 Agent 设置最大步数、超时和预算，防止死循环与成本失控。
 
 ## 五、最重要的实践建议
 
@@ -342,22 +281,19 @@ MCP 可以理解为一种标准化的“模型连接外部工具和数据源”�
 6. Agent 必须有最大步数、超时和预算限制，避免死循环和成本失控。
 7. 优先构建单 Agent。多 Agent 会增加通信、调试、成本和错误传播问题。
 
-## 六、推荐的 Java 技术栈
+## 六、推荐的 Python 技术栈
 
-- Java 21
-- Spring Boot
-- Spring AI 或 LangChain4j
-- PostgreSQL + pgvector
-- Redis
-- Kafka
-- Spring Security
-- OpenAI 或国内模型 API
-- Docker
-- OpenTelemetry
-- MCP
+- Python 3.11+
+- LangChain、LangGraph、langchain-openai
+- python-dotenv、pytest
+- PostgreSQL + pgvector 或 Qdrant
+- Redis（可选）
+- FastAPI（需要提供 Web API 时）
+- Docker、OpenTelemetry
+- OpenAI、DeepSeek 或 OpenRouter 等 OpenAI 兼容 API
 
 ## 七、学习路线总结
 
-> 大模型基础 → Java 调用模型 → Tool Calling → RAG → 单 Agent → 工作流编排 → MCP → 安全评估 → 生产部署
+> Python 基础 → 模型 API → LangChain Core → LangGraph 状态图 → Tool Calling → RAG → MCP/评估 → 生产部署
 
-不需要放弃原有的 Java 能力。数据库、事务、并发、权限、微服务、监控和工程化经验，反而是很多 AI Agent 项目最缺少的部分。需要重点补充的是大模型交互、非确定性系统设计和评估方法。
+重点补充的是 Python 生态、大模型交互、LangGraph 工作流、非确定性系统设计和评估方法；原有 Java 工程能力继续用于设计可靠的 Agent 系统。
